@@ -63,23 +63,23 @@ namespace OpticalManagementSystemAPI.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult> UpdateOptometrist(int id, Optometrist updatedOptometrist)
         {
+            // Check the given ID matches the given appointment
             if (id != updatedOptometrist.Id)
             {
                 return BadRequest("ID in URL does not match ID in body.");
             }
 
+            // Get the current optometrist with the given ID value
             var optometrist = await _context.Optometrists.FindAsync(id);
-
             if (optometrist == null)
-            {
                 return NotFound();
-            }
 
             // Update all fields
             optometrist.FirstName = updatedOptometrist.FirstName;
             optometrist.LastName = updatedOptometrist.LastName;
             optometrist.Calendar = updatedOptometrist.Calendar;
 
+            // Save to DB
             try
             {
                 await _context.SaveChangesAsync();

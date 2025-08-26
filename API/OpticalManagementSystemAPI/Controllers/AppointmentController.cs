@@ -65,5 +65,55 @@ namespace OpticalManagementSystemAPI.Controllers
 
             return CreatedAtAction(nameof(GetAppointment), new { id = appointment.Id }, appointment);
         }
+
+        // DELETE: api/appointment[id] | Delete appointment with given ID
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteAppointment(int id)
+        {
+            // Get appointment with given ID
+            var appointment = await _context.Appointments.FindAsync(id);
+
+            // If no appointment with the given ID is found, return not found
+            if (appointment == null)
+                return NotFound();
+
+            // Remove the appointment from the table and sync changes
+            _context.Appointments.Remove(appointment);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        // PUT: api/appointment[id] | Update appointment with given ID and an updatedAppointment object
+        [HttpPut]
+        public async Task<ActionResult> UpdateAppointment(int id, Appointment updatedAppointment)
+        {
+            // Check the given ID matches the given appointment
+            if (id != updatedAppointment.Id)
+            {
+                return BadRequest("ID in URL does not match ID in body.");
+            }
+
+            // Get the current appointment with the given ID value
+            var appointment = await _context.Appointments.FindAsync(id);
+            if (appointment == null) return NotFound();
+
+            // Update relevant fields
+            appointment.StartTime = updatedAppointment.StartTime;
+            appointment.PatientId = updatedAppointment.PatientId;
+            appointment.CalendarId = updatedAppointment.CalendarId;
+
+            // Save to DB
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return StatusCode(500, "Error updating appointment.");
+            }
+
+            return NoContent();
+        }
     }
 }
