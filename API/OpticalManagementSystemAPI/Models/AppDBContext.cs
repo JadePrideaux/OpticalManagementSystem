@@ -11,6 +11,7 @@ namespace OpticalManagementSystemAPI.Models
         public DbSet<Optometrist> Optometrists { get; set; } = null!;
         public DbSet<Appointment> Appointments { get; set; } = null!;
         public DbSet<WorkingHours> WorkingHours { get; set; } = null!;
+        public DbSet<OptomCalendar> OptomCalenders { get; set; } = null!;
 
         // Relationships
         protected override void OnModelCreating(ModelBuilder modelBuilder)
