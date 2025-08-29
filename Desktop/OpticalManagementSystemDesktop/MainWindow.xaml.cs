@@ -8,7 +8,7 @@ namespace OpticalManagementSystemDesktop
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = new PatientViewModel();
+            DataContext = new MainViewModel(); // Root VM
         }
     }
 }
