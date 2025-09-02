@@ -3,10 +3,12 @@ using System.Windows.Input;
 
 namespace OpticalManagementSystemDesktop.ViewModels
 {
+    // View Model for the Main Menu
     public class MainMenuViewModel
     {
         private readonly MainViewModel _mainViewModel;
 
+        // Command bound to AddPatient button
         public ICommand NavigateToAddPatientCommand { get; }
 
         public MainMenuViewModel(MainViewModel mainViewModel)

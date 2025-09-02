@@ -7,19 +7,23 @@ using System.Windows.Input;
 
 namespace OpticalManagementSystemDesktop.ViewModels
 {
-    public class PatientViewModel : INotifyPropertyChanged
+    // A view model for the add patient screen
+    // Handles logic for binding bata from the view and calling the api to create patients.
+    public class AddPatientViewModel : INotifyPropertyChanged
     {
         private readonly MainViewModel? _mainViewModel;
         private readonly PatientApiService _patientApi;
 
-        public PatientViewModel() : this(null) { }
+        public AddPatientViewModel() : this(null) { }
 
-        // THIS constructor lets you call: new PatientViewModel(mainViewModel)
-        public PatientViewModel(MainViewModel? mainViewModel)
+        // Constructor:
+        public AddPatientViewModel(MainViewModel? mainViewModel)
         {
+            // Set main view model and create a new patient API service
             _mainViewModel = mainViewModel;
             _patientApi = new PatientApiService();
 
+            // Commands that buttons in the view bind to
             CreatePatientCommand = new RelayCommand(async _ => await CreatePatient());
             BackToMenuCommand = new RelayCommand(_ => _mainViewModel?.ShowMainMenu());
         }
@@ -60,15 +64,16 @@ namespace OpticalManagementSystemDesktop.ViewModels
             set { _statusMessage = value; OnPropertyChanged(); }
         }
 
-        // --- Commands ---
+        // Commands exposed to View
         public ICommand CreatePatientCommand { get; }
         public ICommand BackToMenuCommand { get; }
 
-        // --- Action ---
+        // Method to create a patient
         private async Task CreatePatient()
         {
             try
             {
+                // Build a new patient based on input data
                 var newPatient = new Patient
                 {
                     FirstName = FirstName,
@@ -77,16 +82,18 @@ namespace OpticalManagementSystemDesktop.ViewModels
                     DateOfBirth = DateOfBirth
                 };
 
+                // Call API to create patient
                 var result = await _patientApi.CreatePatient(newPatient);
 
+
                 if (result != null)
-                    StatusMessage = $"✅ Created patient with ID: {result.Id}";
+                    StatusMessage = $"Created patient with ID: {result.Id}";
                 else
-                    StatusMessage = "❌ Failed to create patient. See API logs.";
+                    StatusMessage = "Failed to create patient. See API logs.";
             }
             catch (Exception ex)
             {
-                StatusMessage = $"❌ Error: {ex.Message}";
+                StatusMessage = $"Error: {ex.Message}";
             }
         }
 

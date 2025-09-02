@@ -5,7 +5,7 @@ namespace OpticalManagementSystemDesktop.Views
 {
     public partial class AddPatientView : UserControl
     {
-        public AddPatientView(PatientViewModel vm)
+        public AddPatientView(AddPatientViewModel vm)
         {
             InitializeComponent();
             DataContext = vm;

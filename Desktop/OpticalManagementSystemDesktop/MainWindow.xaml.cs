@@ -7,8 +7,10 @@ namespace OpticalManagementSystemDesktop
     {
         public MainWindow()
         {
+            // Load the UI
             InitializeComponent();
-            DataContext = new MainViewModel(); // Root VM
+            // Set the content to conatain data from an instance of the MainViewModel
+            DataContext = new MainViewModel();
         }
     }
 }

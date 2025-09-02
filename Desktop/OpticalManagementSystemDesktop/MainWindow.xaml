@@ -1,4 +1,10 @@
-﻿<Window x:Class="OpticalManagementSystemDesktop.MainWindow"
+﻿<!--
+    The main application window.
+    Contains whatever view is currently active.
+    The MainViewModel determines what view is active, which exposes it as the CurrentView.
+-->
+    
+<Window x:Class="OpticalManagementSystemDesktop.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Optical Management System"
