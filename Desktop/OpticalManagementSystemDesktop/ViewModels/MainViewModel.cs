@@ -40,6 +40,13 @@ namespace OpticalManagementSystemDesktop.ViewModels
             CurrentView = new AddPatientView(patientVM);
         }
 
+        // Shows the add optometrist screen
+        public void ShowAddOptom()
+        {
+            var optomVM = new AddOptomViewModel(this);
+            CurrentView = new AddOptomView(optomVM);
+        }
+
         // Data binding, update and change the UI
         public event PropertyChangedEventHandler? PropertyChanged;
         protected void OnPropertyChanged([CallerMemberName] string? name = null)

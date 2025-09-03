@@ -10,11 +10,13 @@ namespace OpticalManagementSystemDesktop.ViewModels
 
         // Command bound to AddPatient button
         public ICommand NavigateToAddPatientCommand { get; }
+        public ICommand NavigateToAddOptomCommand { get; }
 
         public MainMenuViewModel(MainViewModel mainViewModel)
         {
             _mainViewModel = mainViewModel;
             NavigateToAddPatientCommand = new RelayCommand(_ => _mainViewModel.ShowAddPatient());
+            NavigateToAddOptomCommand = new RelayCommand(_ => _mainViewModel.ShowAddOptom());
         }
     }
 }

@@ -7,24 +7,19 @@ using System.Windows.Input;
 
 namespace OpticalManagementSystemDesktop.ViewModels
 {
-    // A view model for the add patient screen
-    // Handles logic for binding bata from the view and calling the api to create patients.
-    public class AddPatientViewModel : INotifyPropertyChanged
+    public class AddOptomViewModel : INotifyPropertyChanged
     {
         private readonly MainViewModel? _mainViewModel;
-        private readonly PatientApiService _patientApi;
+        private readonly OptomApiService _optomApi;
 
-        public AddPatientViewModel() : this(null) { }
+        public AddOptomViewModel() : this(null) { }
 
-        // Constructor:
-        public AddPatientViewModel(MainViewModel? mainViewModel)
+        public AddOptomViewModel(MainViewModel? mainViewModel)
         {
-            // Set main view model and create a new patient API service
             _mainViewModel = mainViewModel;
-            _patientApi = new PatientApiService();
+            _optomApi = new OptomApiService();
 
-            // Commands that buttons in the view bind to
-            CreatePatientCommand = new RelayCommand(async _ => await CreatePatient());
+            CreateOptomCommand = new RelayCommand(async _ => await CreateOptom());
             BackToMenuCommand = new RelayCommand(_ => _mainViewModel?.ShowMainMenu());
         }
 
@@ -43,20 +38,6 @@ namespace OpticalManagementSystemDesktop.ViewModels
             set { _lastName = value; OnPropertyChanged(); }
         }
 
-        private string _phoneNumber = string.Empty;
-        public string PhoneNumber
-        {
-            get => _phoneNumber;
-            set { _phoneNumber = value; OnPropertyChanged(); }
-        }
-
-        private DateTime _dateOfBirth = DateTime.Now;
-        public DateTime DateOfBirth
-        {
-            get => _dateOfBirth;
-            set { _dateOfBirth = value; OnPropertyChanged(); }
-        }
-
         private string _statusMessage = string.Empty;
         public string StatusMessage
         {
@@ -64,31 +45,27 @@ namespace OpticalManagementSystemDesktop.ViewModels
             set { _statusMessage = value; OnPropertyChanged(); }
         }
 
-        // Commands exposed to View
-        public ICommand CreatePatientCommand { get; }
+        public ICommand CreateOptomCommand { get; }
         public ICommand BackToMenuCommand { get; }
 
-        // Method to create a patient
-        private async Task CreatePatient()
+        public async Task CreateOptom()
         {
             try
             {
-                // Build a new patient based on input data
-                var newPatient = new Patient
+                // Build an optom based on input data
+                var newOptom = new Optometrist
                 {
                     FirstName = FirstName,
-                    LastName = LastName,
-                    PhoneNumber = PhoneNumber,
-                    DateOfBirth = DateOfBirth
+                    LastName = LastName
                 };
 
-                // Call API to create patient
-                var result = await _patientApi.CreatePatient(newPatient);
+                // Call API to create optometrist
+                var result = await _optomApi.CreateOptom(newOptom);
 
                 if (result != null)
-                    StatusMessage = $"Created patient with ID: {result.Id}";
+                    StatusMessage = $"Created optometrist with ID: {result.Id}";
                 else
-                    StatusMessage = "Failed to create patient. See API logs.";
+                    StatusMessage = "Failed to create optometrist. See API logs.";
             }
             catch (Exception ex)
             {
