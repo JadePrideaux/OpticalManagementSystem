@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using OpticalManagementSystemAPI.DTOs;
 using OpticalManagementSystemAPI.Models;
 
 namespace OpticalManagementSystemAPI.Controllers
@@ -17,28 +18,54 @@ namespace OpticalManagementSystemAPI.Controllers
 
         // GET: api/optometrists | Get all optometrists
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Optometrist>>> GetOptometrists()
+        public async Task<ActionResult<IEnumerable<OptometristDTO>>> GetOptometrists()
         {
-            var optometrists = await _context.Optometrists.ToListAsync();
-            return Ok(optometrists);
+            // Load optometrists from the database as an EF entity, including the referenced entities.
+            var optometrists = await _context.Optometrists
+                .Include(o => o.Calendar)
+                .ThenInclude(c => c.WorkingHours)
+                .Include(o => o.Calendar.Appointments)
+                .ToListAsync();
+
+            var dtos = optometrists.Select(o => o.ToDTO()).ToList();
+            return Ok(dtos);
         }
 
         // GET: api/optometrists/[id] | Get optometrist by ID
         [HttpGet("{id}")]
         public async Task<ActionResult<Optometrist>> GetOptometrist(int id)
         {
-            var optometrist = await _context.Optometrists.FindAsync(id);
-            return optometrist == null ? NotFound() : Ok(optometrist);
+            // Load optometrist from the database as an EF entity, including the referenced entities.
+            var optometrist = await _context.Optometrists
+                .Include(o => o.Calendar)
+                .ThenInclude(c => c.WorkingHours)
+                .Include(o => o.Calendar.Appointments)
+                .FirstOrDefaultAsync(o => o.Id == id);
+
+            return optometrist == null ? NotFound() : Ok(optometrist.ToDTO());
         }
 
         // POST: api/optometrists | Create new optometrist
         [HttpPost]
-        public async Task<ActionResult<Optometrist>> CreateOptometrist(Optometrist optometrist)
+        public async Task<ActionResult<OptometristCreateDTO>> CreateOptometrist(OptometristCreateDTO optomDTO)
         {
+            var optometrist = new Optometrist
+            {
+                FirstName = optomDTO.FirstName,
+                LastName = optomDTO.LastName
+            };
+
             _context.Optometrists.Add(optometrist);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetOptometrist), new { id = optometrist.Id }, optometrist);
+            var result = new
+            {
+                optometrist.Id,
+                optometrist.FirstName,
+                optometrist.LastName
+            };
+
+            return CreatedAtAction(nameof(GetOptometrist), new { id = optometrist.Id }, optometrist.ToDTO());
         }
 
         // DELETE: api/optometrists[id] | Delete optometrist with ID
