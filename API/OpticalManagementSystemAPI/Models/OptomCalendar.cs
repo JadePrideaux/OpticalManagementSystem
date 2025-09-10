@@ -12,9 +12,9 @@
         public TimeSpan SlotLength { get; set; } = TimeSpan.FromMinutes(25);
 
         // List of working hours
-        public List<WorkingHours>? WorkingHours { get; set; }
+        public List<WorkingHours> WorkingHours { get; set; } = new();
 
         // List of the appointments
-        public List<Appointment>? Appointments { get; set; }
+        public List<Appointment> Appointments { get; set; } = new();
     }
 }
