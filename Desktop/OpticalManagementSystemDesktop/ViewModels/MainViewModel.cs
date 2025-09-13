@@ -47,6 +47,13 @@ namespace OpticalManagementSystemDesktop.ViewModels
             CurrentView = new AddOptomView(optomVM);
         }
 
+        // Shows the view calendars screen
+        public void ShowViewCalendars()
+        {
+            var calendarsVM = new CalendarsViewModel(this);
+            CurrentView = new ViewCalendarsView(calendarsVM);
+        }
+
         // Data binding, update and change the UI
         public event PropertyChangedEventHandler? PropertyChanged;
         protected void OnPropertyChanged([CallerMemberName] string? name = null)
